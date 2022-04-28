@@ -6,17 +6,6 @@ k=(2/(2.5*3.75));
 Tc=0.2;
 Tamostra = Tc;
 %%
-
-s = tf('s')
-
-ft = k/((s+p1)*(s+p2))
-
-ftz = c2d(ft,Tc,'zoh')
-
-%step(ftz,50)
-
-%%
-
 a0=k/(p1*p2);
 a1=k/(-p1*(p2-p1));
 a2=k/(-p2*(p1-p2));
@@ -26,7 +15,6 @@ x3=x1+x2;
 x4=exp(-(p1+p2)*Tc);
 
 %%
-
 c0=a0+a1+a2;
 
 c1=a0*x3+a1*(x2-1)+a2*(x1-1);
@@ -36,6 +24,16 @@ c2=a0*x4-a1*x2-a2*x1;
 r0=1;
 r1=x3;
 r2=x4;
+%%
+
+s = tf('s')
+
+ft = k/((s+p1)*(s+p2))
+
+ftz = c2d(ft,Tc,'zoh')
+
+%step(ftz,50)
+%                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
 
 %% Aplicando o relé:
 
@@ -43,8 +41,9 @@ n=200;
 dh=0.5;   eps=0.2;
 nptos=1000; 
 
-
 [yr,ur]=proc(n,p1,p2,k,Tc,dh,eps);
+
+%%
 % figure;
 % grid;
 % plot(yr,'c-');
@@ -88,9 +87,9 @@ Lp = 2;
 
 %     %Margem de fase:
 %%
-%         Theta_m = (pi/2)*(1-(1/Am));
+Theta_m = (pi/2)*(1-(1/Am));
 % 
-%          [Kc; Ki; Kd] = (pi/(2*Am*Lp))*[b;c;a];
+% [Kc; Ki; Kd] = (pi/(2*Am*Lp))*[b;c;a];
 
 %% Aplicando o CN-PID-FG:
 
@@ -117,19 +116,21 @@ erro(1)=1 ; erro(2)=1 ; erro(3)=1; erro(4)=1;
 
 L=2;%Provavelmente o valor de limite das memberships functions
 
-Kd=2*Kp*Td/Tc; %Valor do ganho associado ao termo derivativo do PID sintonizado pelo relé;  
-Ki=(Kp*Tc)/(2*Ti);
-Kc = Kp;
-%         K = (pi/(2*Am*Lp))*[b;c;a];
-%         Kc = K(1);
-%         Ki = K(2);
-%         Kd = K(3);
-
+% Kd=2*Kp*Td/Tc; %Valor do ganho associado ao termo derivativo do PID sintonizado pelo relé;  
+% Ki=(Kp*Tc)/(2*Ti);
+% Kc = Kp;
+%%
+        K = (pi/(2*Am*Lp))*[b;c;a];
+        Kc = K(1);
+        Ki = K(2);
+        Kd = K(3);
+%%
 rlevel = 0.0;
 ruido = rlevel*rand(1,1000);
 
 for i=5:nptos,
-    p1=(1/2.5)+rlevel*rand;
+
+p1=(1/2.5)+rlevel*rand;
 p2= (1/3.75)+ruido(i);
 k=(2/(2.5*3.75));
 
@@ -146,7 +147,7 @@ c1=a0*x3+a1*(x2-1)+a2*(x1-1);
 c2=a0*x4-a1*x2-a2*x1;
 r0=1;
 r1=x3;
-r2=x4;
+r2=x4; 
      if (i==550),r1 = - 1.84;r2 = 0.9109;  end
      y(i)= -r1*y(i-1)-r2*y(i-2)+c0*u(i-2)+c1*u(i-3)+c2*u(i-4);
      
@@ -164,6 +165,8 @@ r2=x4;
       fprintf('amostra:  %d \t entrada:  %6.3f \t saida:  %4.0f\n',i,u(i),y(i));
       
  end ;
+ 
+ 
       ISE_t2 = objfunc(erro,tempo,'ISE')
      ITSE_t2 = objfunc(erro,tempo,'ITSE')
      ITAE_t2 = objfunc(erro,tempo,'ITAE')
