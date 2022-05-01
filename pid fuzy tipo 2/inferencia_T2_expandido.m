@@ -1,12 +1,10 @@
 function Am =inferencia(erro,rate,L,T,Itype)
 %%
-%% Maquina de inferencia TYPE-2
-%% 
-%%
-%% Autor: jose borges 
+% Maquina de inferencia TYPE-2
+% Autor: jose borges 
 %% Data: 04/03/2019
 
-[mi mo]=pertinencias_T2_NL(erro,rate,L,T,Itype);   % Pertinencias para variavel de entrada ERRO
+[mi mo]=pertinencias_T2_expandido(erro,rate,L,T,Itype);   % Pertinencias para variavel de entrada ERRO
 
 % Forma do vetor mi
 % mi = [Nb,Zb,Pb,Zu,Zl,Nu,Nl,Pu,Pl]
@@ -23,8 +21,9 @@ Y(1,:) = [(exp(-R(1,1)*4)), (exp(-R(1,2)*4))];
   
 %REGRA 2: 
 
+
 R(2,:) = [mi(7)*mo(5),mi(6)*mo(4)];
-Y(2,:) = [(invgauss(R(2,1),0.5)),(invgauss(R(2,2),0.5))]
+Y(2,:) = [(exp(-R(2,1)*4)),(exp(-R(2,2)*4))];
 
 %REGRA 3: 
 
@@ -60,7 +59,7 @@ Y(7,:) = [(exp(-R(7,1)*4)), (exp(-R(7,2)*4))];
 
 R(8,:) = [mi(9)*mo(5),mi(8)*mo(4)];
 
-Y(8,:) = [(invgauss(R(8,1),0.5)), (invgauss(R(8,2),0.5))];
+Y(8,:) = [(exp(-R(8,2)*4)), (exp(-R(8,2)*4))];
 
 
 %REGRA 9: 
@@ -74,7 +73,7 @@ Y(9,:) = [(exp(-R(9,1)*4)), (exp(-R(9,2)*4))];
        [y(i),yl(i),yr(i),l(i),r(i)]=EIASC(Y(i,1),Y(i,2),R(i,1),R(i,2),1);
        
        IF(i) = (R(i,1)*yl(i) + R(i,2)*yr(i))/2;
-       
+                                                                
     end
 
 Am = sum(IF);

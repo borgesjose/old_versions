@@ -5,6 +5,7 @@ p2=(1/3.75);
 k=(2/(2.5*3.75));
 Tc=0.2;
 Tamostra = Tc;
+
 %%
 a0=k/(p1*p2);
 a1=k/(-p1*(p2-p1));
@@ -24,6 +25,8 @@ c2=a0*x4-a1*x2-a2*x1;
 r0=1;
 r1=x3;
 r2=x4;
+
+
 %%
 
 s = tf('s')
@@ -44,11 +47,11 @@ nptos=1000;
 [yr,ur]=proc(n,p1,p2,k,Tc,dh,eps);
 
 %%
-% figure;
-% grid;
-% plot(yr,'c-');
-% hold on;
-% plot(ur);
+figure;
+grid;
+plot(yr,'c-');
+hold on;
+plot(ur);
 
 %% Identificando pelo metodo do relé:
 [gw,w,arm]=ident1(n, dh, eps,Tc,yr);
